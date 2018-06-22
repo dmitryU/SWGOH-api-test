@@ -1,17 +1,24 @@
 class Character:
-    def __init__(self, name, power, description):
+    def __init__(self, baseId, name, power, description, url, image):
+        self.baseId = baseId
         self.name = name
         self.power = power
         self.description = description
+        self.url = url
+        self.image = image
     def serialize(self):
         print ("Name: " + self.name)
         print ("Power: " + str(self.power))
+        print ("Description: " + self.description)
 
 class Ship:
-    def __init__(self, name, power, description):
+    def __init__(self, baseId, name, power, description, url, image):
+        self.baseId = baseId
         self.name = name
         self.power = power
         self.description = description
+        self.url = url
+        self.image = image
     def serialize(self):
         print ("Name: " + self.name)
         print ("Power: " + str(self.power))

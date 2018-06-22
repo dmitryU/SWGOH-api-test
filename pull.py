@@ -2,15 +2,14 @@
 import requests
 import json
 import pickle
-from character import *
-from ship import *
+from objects import *
 
 response = requests.get('https://swgoh.gg/api/characters')
 json_data = response.json()
 characters = []
 
 for idx, c in enumerate(json_data):
-    newChar = Character(c['name'], c['power'], c['description'])
+    newChar = Character(c['base_id'], c['name'], c['power'], c['description'], c['url'], c['image'])
     characters.append(newChar)
 
 response = requests.get('https://swgoh.gg/api/ships')
@@ -18,7 +17,7 @@ json_data = response.json()
 ships = []
 
 for s in json_data:
-    newShip = Ship(s['name'], s['power'], s['description'])
+    newShip = Ship(s['base_id'], s['name'], s['power'], s['description'], s['url'], s['image'])
     ships.append(newShip)
 
 response = requests.get('https://swgoh.gg/api/guilds/34508/units')
