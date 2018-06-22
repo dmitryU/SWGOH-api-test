@@ -31,7 +31,7 @@ for name, instances in json_data.items():
     new_unit = GuildUnit(name, unit_instances)
     units.append(new_unit)
 
-ro2 = Guild("Rule of Two Reloaded")
-ro2.setUnits = units
-with open("ro2.pkl", "wb+") as file:
-    pickle.dump(ro2, file)
+guild = Guild("DarkLightCrew")
+guild.setUnits = units
+with open("guild.pkl", "wb+") as file:
+    pickle.dump(guild, file)

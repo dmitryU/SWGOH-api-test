@@ -21,7 +21,7 @@ for s in json_data:
     newShip = Ship(s['name'], s['power'], s['description'])
     ships.append(newShip)
 
-response = requests.get('https://swgoh.gg/api/guilds/12399/units')
+response = requests.get('https://swgoh.gg/api/guilds/34508/units')
 json_data = response.json()
 with open('units.json','w+') as file:
     json.dump(json_data, file)
