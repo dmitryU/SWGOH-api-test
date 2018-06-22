@@ -32,6 +32,8 @@ class GuildInstance:
         print ("\tPower: " + str(self.power))
         print ("\tLevel: " + str(self.level))
         print ("\tRarity: " + str(self.rarity))
+    def __str__(self):
+        return "%s;%d;%d;%d;%d" % (self.player, self.gear_level, self.power, self.level, self.rarity)
 
 class GuildUnit:
     def __init__(self, name, GuildInstances):
