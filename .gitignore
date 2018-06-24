@@ -1,4 +1,6 @@
 __pycache__/
+downloads/*
+config.py
 *.pkl
 units.json
 *.csv
