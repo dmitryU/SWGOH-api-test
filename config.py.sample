@@ -1,0 +1,12 @@
+TOKEN = 'токен бота'
+PROXY = {
+    'proxy_url': 'socks5://урл сокс-прокси' # взять отсюда: http://spys.one/en/socks-proxy-list/
+    # # Optional, if you need authentication:
+    # 'urllib3_proxy_kwargs': {
+    #     'username': 'PROXY_USER',
+    #     'password': 'PROXY_PASS',
+    # }
+}
+
+import logging
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
