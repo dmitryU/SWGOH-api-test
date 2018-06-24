@@ -2,6 +2,6 @@ __pycache__/
 downloads/*
 config.py
 *.pkl
-units.json
+*.json
 *.csv
 dict.txt

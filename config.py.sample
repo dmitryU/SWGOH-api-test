@@ -1,4 +1,5 @@
 TOKEN = 'токен бота'
+
 PROXY = {
     'proxy_url': 'socks5://урл сокс-прокси' # взять отсюда: http://spys.one/en/socks-proxy-list/
     # # Optional, if you need authentication:
@@ -7,6 +8,9 @@ PROXY = {
     #     'password': 'PROXY_PASS',
     # }
 }
+
+# Имя пользователя, который может управлять ботом
+SUPERUSER='@VasyaPupkin'
 
 import logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
