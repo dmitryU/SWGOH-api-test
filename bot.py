@@ -5,7 +5,7 @@ import os, sys
 from threading import Thread
 import json
 from config import *
-from tickets import ocr_tickets, parse_tickets
+#from tickets import ocr_tickets, parse_tickets
 from functools import wraps
 
 # Список пользователей бота
@@ -41,7 +41,7 @@ def restricted_admins(func):
         user_id = update.effective_user.id
         if user_id not in LIST_OF_ADMINS:
             logging.error("Доступ запрещен для пользователя {}.".format(user_id))
-            return restricted_callback(bot, update, *args, **kwargs)
+            return restricted_callback(bot, update)
         return func(bot, update, *args, **kwargs)
     return wrapped
 
@@ -51,7 +51,7 @@ def restricted_users(func):
         user_id = update.effective_user.id
         if users.get(user_id) == None:
             logging.error("Доступ запрещен для пользователя {}.".format(user_id))
-            return restricted_callback(bot, update, *args, **kwargs)
+            return restricted_callback(bot, update)
         return func(bot, update, *args, **kwargs)
     return wrapped
 
@@ -66,24 +66,28 @@ def broadcast_to_users(bot, message):
 
 
 logging.info('Инициализирую бота...')
-updater = Updater(token=TOKEN, request_kwargs=PROXY)
+updater = Updater(token=TOKEN)#, request_kwargs=PROXY)
 dispatcher = updater.dispatcher
 
 
 
 def start_callback(bot, update):
     # Оповестить о новом пользователе
+    #if update.effective_user.id in users:
+    #    # этот пользователь уже зарегистрирован
+    #    logging.info('Old user: ' + str(update.effective_user))
+    #    return update.message.reply_text("С возвращением, %s!" % update.effective_user.first_name)
     logging.info('New user: ' + str(update.effective_user))
+    # Уведомить админов о новом пользователе
     for admin in LIST_OF_ADMINS:
-        keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("Добавить этого пользователя",
+        keyboard = InlineKeyboardMarkup([[InlineKeyboardButton("Разрешить \"%s\" пользоваться ботом" % update.effective_user.first_name,
             callback_data="adduser({})".format(update.effective_user.id))]])
         bot.send_message(chat_id=admin, text='У бота появился новый пользователь:\nid: %d\nname: %s\nlogin: %s'
             % (update.effective_user.id, update.effective_user.first_name, update.effective_user.username),
             reply_markup=keyboard)
     # Вывести приглашение пользователю
-    bot.send_message(chat_id=update.message.chat_id,
-        text=("Я бот для гильдии DarkLightCrew.\nДобро пожаловать, %s!\nДождитесь одобрения администратором для использования этого бота."
-            % update.effective_user.first_name))
+    update.message.reply_text("Я бот для гильдии DarkLightCrew.\nДобро пожаловать, %s!\nДождитесь одобрения администратором для использования этого бота."
+            % update.effective_user.first_name)
 
 dispatcher.add_handler(CommandHandler('start', start_callback))
 
@@ -177,27 +181,29 @@ def echo_callback(bot, update):
 dispatcher.add_handler(MessageHandler(Filters.text, echo_callback))
 
 
-
-@restricted_users
-def screenshot_callback(bot, update):
-    if users.get(update.message.chat_id) == None:
-        bot.send_message(chat_id=update.message.chat_id, text='Эта функция только для игроков гильдии')
-        return
+def screenshot_parse(bot, update, photo_file):
     # получить скрин с энкой
-    try:
-        photo_file = bot.getFile(update.message.photo[-1].file_id)
+    try:        
         filename = os.path.join('downloads', '{}.jpg'.format(photo_file.file_id))
         photo_file.download(filename)
-        bot.send_message(chat_id=update.message.chat_id, text="Получил скриншот, пытаюсь найти в нем результаты энки. Пожалуйста, подождите...")
+        update.message.reply_text("Получил скриншот, пытаюсь найти в нем результаты энки. Пожалуйста, подождите...")
     except:
-        bot.send_message(chat_id=update.message.chat_id, text="Не удалось получить скриншот: " + repr(sys.exc_info()[0]))
+        update.message.reply_text("Не удалось получить скриншот: " + repr(sys.exc_info()[0]))
     # распознать
-    try:
-        text = ocr_tickets(filename)
-        result = parse_tickets(text)
-        bot.send_message(chat_id=update.message.chat_id, text="Содержимое: " + str(result))
-    except:
-        bot.send_message(chat_id=update.message.chat_id, text="Не удалось распознать энку: " + repr(sys.exc_info()[0]))
+    #try:
+    #    text = ocr_tickets(filename)
+    #    result = parse_tickets(text)
+    #    update.message.reply_text("Содержимое: " + str(result))
+    #except:
+    #    update.message.reply_text("Не удалось распознать энку: " + repr(sys.exc_info()[0]))
+
+
+@restricted_users
+def screenshot_callback(bot, update):    
+    update.message.reply_text(repr(update.message.photo))
+    #update.message.reply_text("Скриншотово получено: %d. Начинаю обработку..." % len(update.message.photo))
+    #for photo in update.message.photos
+    #  screenshot_parse(bot, update, bot.getFile(photo.file_id))
 
 dispatcher.add_handler(MessageHandler(Filters.photo, screenshot_callback))
 
