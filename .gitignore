@@ -1,5 +1,7 @@
 __pycache__/
 downloads/*
+venv/
+*~
 config.py
 *.pkl
 *.json
